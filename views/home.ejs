@@ -1,10 +1,21 @@
 <section>
     <h1>Home page</h1>
 
-    <div>
+    <div id="form_container">
         <form action="/upload" method="post" enctype="multipart/form-data">
-            <input type="file" id="docpicker" name="CSV_File" accept=".csv">
+            <input type="text" name="name" placeholder="You can give name to your file...">
+            <input type="file" id="docpicker" name="newFile" accept=".csv" required>
             <button type="submit">Upload</button>
         </form>
     </div>
+
+    <div id="files_container">
+        <ul>
+            <% for(file of allFiles){ %>
+                <li><a href="/showFile/<%= file._id %>"><%= file.name%></a></li>
+            <% } %>
+        </ul>
+    </div>
 </section>
+
+<script src="/js/home.js"></script>

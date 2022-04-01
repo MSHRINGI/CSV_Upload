@@ -1,0 +1,18 @@
+
+<section>
+    <h1>Here is your data</h1>
+    <table border="1">
+        <tr>
+            <% for(heading of tableData.header) {%> 
+                <th><%= heading %></th>
+            <%} %>
+        </tr>
+        <% for(let i=1; i<tableData.data.length; i++) {%>
+            <tr>
+                <% for(let j=0; j<tableData.data[0].length; j++){%>
+                    <td><%= tableData.data[i][j] %></td>    
+                <%}%>
+            </tr>    
+        <%}%>
+    </table>
+</section>
