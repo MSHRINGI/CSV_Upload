@@ -20,11 +20,12 @@ const development = {
 
 const production = {
     name: 'production',
+    db: process.env.CSV_DB,
     morgan : {
         mode: 'combined',
         options : {stream : accessLogStream}
     }
 }
 
-module.exports = development;
-// module.exports = eval(process.env.CODEIAL_ENVIRONMENT) == undefined ? development : eval(process.env.CODEIAL_ENVIRONMENT);
+// module.exports = development;
+module.exports = eval(process.env.CSV_ENVIRONMENT) == undefined ? development : eval(process.env.CSV_ENVIRONMENT);

@@ -6,18 +6,13 @@ const FILE_PATH = path.join('/uploads');
 const fileSchema = new mongoose.Schema({
     name:{
         type: String,
-        // unique: true,
-        // required: true
     },
-    newFile: {
-        type: String,
-        // required: true
-    },
-    arrayFile:[]
+    arrayFile:[],
 },{
     timestamps: true
 });
 
+// save the file into local storage and give name to the file
 let storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, path.join(__dirname, '../uploads'));
@@ -27,6 +22,7 @@ let storage = multer.diskStorage({
     }
 });
 
+// Filter for checking the file is csv or not
 const csvFilter = function(req, file, cb){
     if(file.mimetype.includes("csv")){
         cb(null, true);
@@ -35,8 +31,8 @@ const csvFilter = function(req, file, cb){
     }
 }
 
+// static fuction for uploading file
 fileSchema.statics.uploadedFile = multer({storage: storage, fileFilter: csvFilter}).single('newFile');
-fileSchema.statics.filePath = FILE_PATH;
 
 const File = mongoose.model('File', fileSchema);
 module.exports = File;

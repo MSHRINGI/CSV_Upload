@@ -1,21 +1,50 @@
-<section>
-    <h1>Home page</h1>
+<link rel="stylesheet" href="/css/home.css">
 
-    <div id="form_container">
+<section>
+
+    <!-- Container for uploading files -->
+    <div class="container bg-info" id="upload-container">
+        
+        <div class="row text-center m-2 p-2 align-middle">
+            <h3> <i class="fas fa-file-upload"></i> Upload your file here...</h3>
+        </div>
+
         <form action="/upload" method="post" enctype="multipart/form-data">
-            <input type="text" name="name" placeholder="You can give name to your file...">
-            <input type="file" id="docpicker" name="newFile" accept=".csv" required>
-            <button type="submit">Upload</button>
+            <div class="row d-flex justify-content-around align-items-center p-2">
+                <div class="input-group flex-nowrap col-6 w-50">
+                    <span class="input-group-text" id="addon-wrapping">Name</span>
+                    <input type="text" name="name" class="form-control" id="name" placeholder="You can give name to your file..." aria-label="Username" aria-describedby="addon-wrapping">
+                </div>
+                <div class="col-4">
+                    <input type="file" id="docpicker" name="newFile" accept=".csv" required>
+                </div>
+                <div class="col-1">
+                    <button type="submit" class="btn btn-success">Upload</button>
+                </div>
+            </div>
         </form>
     </div>
 
-    <div id="files_container">
-        <ul>
-            <% for(file of allFiles){ %>
-                <li><a href="/showFile/<%= file._id %>"><%= file.name%></a></li>
-            <% } %>
-        </ul>
-    </div>
-</section>
+    <!-- This is the container for displaying all the files into the database -->
+    <div class="container my-2 p-1 bg-secondary" id="list-container">
+        <div class="row text-center p-2">
+            <h3> <i class="fas fa-th-list"></i> List of all Uploaded Files</h3>
+        </div>
 
-<script src="/js/home.js"></script>
+        <ol class="list-group list-group-numbered">
+            <div class="row d-flex justify-content-start p-1">
+                <% for(file of allFiles){ %>
+                    <div class="col-6">
+                        <li class="list-group-item list-group-item-action list-group-item-primary my-1">
+                            <a href="/showFile/<%= file._id %>" class="text-decoration-none">
+                                <i class="fas fa-file-alt"></i> <%= file.name%>
+                            </a>
+                        </li>
+                    </div>
+                <% } %>
+            </div>
+        </ol>
+
+    </div>
+
+</section>

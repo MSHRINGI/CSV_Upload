@@ -3,58 +3,69 @@ const csv = require('fast-csv');
 const fs = require('fs');
 
 module.exports.home = async function (req, res) {
-    let allFiles = await File.find({});
-    return res.render('home', {
-        title: "Home",
-        allFiles: allFiles
-    });
+
+    try{
+
+        // Finds all the files present into the database
+        let allFiles = await File.find({});
+
+        // sending data to ejs file for rendering
+        return res.render('home', {
+            title: "Home",
+            allFiles: allFiles
+        });
+    }catch(err){
+        console.log("Error", err);
+        return res.redirect('back');
+    }
 }
 
+// for uploading the file
 module.exports.upload = async function (req, res) {
-    console.log(req.body);
     try {
 
+        // First create a file
         let createdFile = await File.create(req.body);
-        console.log("FIle we need", createdFile);
 
+        // calling the static function
         File.uploadedFile(req, res, function (error) {
             if (error) {
                 console.log("Error in uploading file with multer", error);
+                req.flash('error', "Something is wrong");
                 return res.redirect('back');
             }
 
+            // giving name to the file
             if (req.body.name) {
                 createdFile.name = req.body.name;
             } else {
                 createdFile.name = req.file.filename;
             }
 
+            // if file present
             if (req.file) {
-                console.log("req.file = ", req.file);
-                createdFile.newFile = File.filePath + '/' + req.file.filename;
-                createdFile.save();
-
-                // open uploaded file
+                // open uploaded file and parse the data
                 csv.parseFile(req.file.path)
                     .on("data", function (data) {
-                        // fileRows.push(data); // push each row
-                        createdFile.arrayFile.push(data);
-                        
+                        createdFile.arrayFile.push(data); // push each row
                     })
                     .on("end", function () {
-                        console.log("All parsed data from parser" ,createdFile.arrayFile);
                         createdFile.save();
                         fs.unlinkSync(req.file.path);   // remove temp file
                     })
+
+                // for displaying the notification
+                req.flash('success', "File Uploaded Successfully");
                 return res.redirect('back');
             } else {
                 console.log("Please upload a CSV file");
+                req.flash('error', "Inavailid File");
                 return res.redirect('back');
             }
         });
     } catch (err) {
         console.log("Error in uploading", err);
+        req.flash('error', "Error in uploading file");
         return res.redirect('back');
     }
-
 }

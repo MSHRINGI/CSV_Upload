@@ -1,16 +1,21 @@
 const File = require('../models/file');
 
+// For showing the data from clicked file into the table
 module.exports.showFile = async function (req, res) {
+
     try {
+
+        // First find the id througn params id from database
         let file = await File.findById(req.params.id);
-        console.log("this is the complete file" ,file.arrayFile);
-        // console.log("length of the first row", file.arrayFile[0].length);
-        // console.log("first element", file.arrayFile[0][0]);
-        
+
+        // Sending the data to ejs file
         let tableData = {
             header : file.arrayFile[0],
-            data: file.arrayFile
+            data: file.arrayFile,
+            file: file
         }
+
+        // Showing data on front end
         return res.render('showFile', {
             title: "File",
             tableData: tableData
